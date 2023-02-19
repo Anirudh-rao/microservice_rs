@@ -1,4 +1,3 @@
-
 extern crate hyper;
 extern crate futures;
 
@@ -6,23 +5,22 @@ extern crate futures;
 extern crate log;
 extern crate env_logger;
 
+use hyper::server::{Request, Response, Service};
 
-use hyper::server::{Request,Response,Service};
 use futures::future::Future;
 
 struct Microservice;
 
-impl service for Microservice{
-    type Request =  Request;
-    type Response =  Response;
-    type Error  =  hype::Error;
-    type Future =  Box<Future<Item = Self::Response, Error =  self::Error>>;
+impl Service for Microservice {
+    type Request = Request;
+    type Response = Response;
+    type Error = hyper::Error;
+    type Future = Box<dyn Future<Item = Self::Response, Error = Self::Error>>;
 
-    fn call(&self, request::Request) -> Self::Future{
-        info!("Microservice Recieved a request:{;?}", request);
-        Box::new(futures::future::ok(Reponse::New()))
+    fn call(&self, request: Request) -> Self::Future {
+        info!("Microservice received a request: {:?}", request);
+        Box::new(futures::future::ok(Response::new()))
     }
-
 }
 
 fn main() {
